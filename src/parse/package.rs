@@ -140,6 +140,7 @@ pub fn parse_open(
 
 pub fn parse_defn(
   refs: Refs,
+  _defs: &mut Defs,
 ) -> impl Fn(Span) -> IResult<Span, Declaration, ParseError<Span>> {
   move |from: Span| {
     let (i, _) = tag("def")(from)?;
@@ -206,7 +207,7 @@ pub fn parse_package(
       }
       else {
         let (i2, decl) =
-          alt((parse_defn(refs.to_owned()), parse_open(env.to_owned(), &mut defs)))(i)?;
+          alt((parse_defn(refs.to_owned(), &mut defs), parse_open(env.to_owned(), &mut defs)))(i)?;
         decls.push(decl.clone());
         match decl {
           Declaration::Defn { name, defn, term } => {
