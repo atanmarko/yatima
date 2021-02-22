@@ -104,6 +104,7 @@ fn parse_with(i: Span) -> IResult<Span, Vec<String>, ParseError<Span>> {
 
 pub fn parse_open(
   env: PackageEnv,
+  _defs: &mut Defs,
 ) -> impl Fn(Span) -> IResult<Span, Declaration, ParseError<Span>> {
   move |i: Span| {
     let (i, _) = tag("open")(i)?;
@@ -205,7 +206,7 @@ pub fn parse_package(
       }
       else {
         let (i2, decl) =
-          alt((parse_defn(refs.to_owned()), parse_open(env.to_owned())))(i)?;
+          alt((parse_defn(refs.to_owned()), parse_open(env.to_owned(), &mut defs)))(i)?;
         decls.push(decl.clone());
         match decl {
           Declaration::Defn { name, defn, term } => {
