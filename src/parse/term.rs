@@ -680,6 +680,7 @@ pub fn parse_term(
     )(i)
   }
 }
+
 pub fn parse(i: &str) -> IResult<Span, Term, ParseError<Span>> {
   parse_expression(HashMap::new(), Vector::new())(Span::new(i))
 }
